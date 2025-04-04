@@ -1,4 +1,4 @@
-# ANTLR files 
-All 3 files are runnable with commands:
+# ANTLR folders 
+All 3 folders are runnable with commands:
 .\build.bat
 .\run.bat
