@@ -49,6 +49,30 @@ class TypeCheckerVisitor(PLC_GrammarVisitor):
         if cond_type != "bool":
             self.errors.append("Chyba: Podmienka vo 'while' musi mat typ bool.")
         self.visit(ctx.statement())
+        
+    def visitForCondition(self, ctx):
+        if ctx.getChildCount() == 9:  # 'for' '(' expr ';' expr ';' expr ')' stmt
+            first_expr = ctx.expression(0)
+            second_expr = ctx.expression(1)
+            third_expr = ctx.expression(2)
+
+            # Kontrola inicializácie (int alebo priradenie s OK typom)
+            first_type = self.visit(first_expr)
+            if first_type != "int":
+                self.errors.append(f"Chyba: Prvý výraz vo 'for' musí mať typ int, nie '{first_type}'.")
+
+            # Kontrola bool podmienky
+            cond_type = self.visit(second_expr)
+            if cond_type != "bool":
+                self.errors.append(f"Chyba: Podmienka vo 'for' musí mať typ bool, nie '{cond_type}'.")
+
+            # Kontrola priraďovacieho výrazu typu int
+            third_type = self.visit(third_expr)
+            if third_type != "int":
+                self.errors.append(f"Chyba: Tretí výraz vo 'for' musí mať typ int (napr. i = i + 1), nie '{third_type}'.")
+
+            self.visit(ctx.statement())
+
 
     def visitAssignment(self, ctx):
         if ctx.getChildCount() == 3:
