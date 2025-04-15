@@ -51,7 +51,7 @@ class TypeCheckerVisitor(PLC_GrammarVisitor):
         self.visit(ctx.statement())
         
     def visitForCondition(self, ctx):
-        if ctx.getChildCount() == 9:  # 'for' '(' expr ';' expr ';' expr ')' stmt
+        if ctx.getChildCount() == 9:  
             first_expr = ctx.expression(0)
             second_expr = ctx.expression(1)
             third_expr = ctx.expression(2)

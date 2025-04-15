@@ -50,21 +50,11 @@ class TypeCheckerVisitor(PLC_GrammarVisitor):
             self.errors.append("Chyba: Podmienka vo 'while' musi mat typ bool.")
         self.visit(ctx.statement())
         
-    def visitTernaryOperator(self, ctx):
-        value_if_true_type = self.visit(ctx.expression(0))
-        condition_type = self.visit(ctx.expression(1))
-        value_if_false_type = self.visit(ctx.expression(2))
-
-        if condition_type != "bool":
-            self.errors.append("Chyba: Podmienka v ternárnom operátore musí mať typ 'bool'.")
-
-        if value_if_true_type != value_if_false_type:
-            self.errors.append(
-                f"Chyba: Typy v ternárnom operátore sa musia zhodovať. "
-                f"Pravdivá vetva má typ '{value_if_true_type}', nepravdivá vetva má typ '{value_if_false_type}'."
-            )
-
-        return value_if_true_type
+    def visitDoWhileCondition(self, ctx):
+        self.visit(ctx.statement())
+        cond_type = self.visit(ctx.expression())
+        if cond_type != "bool":
+            self.errors.append("Chyba: Podmienka v 'do while' musi mat typ bool.")
 
             
             

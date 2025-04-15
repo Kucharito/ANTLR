@@ -11,7 +11,7 @@ statement
     | block 
     | ifCondition 
     | whileCondition
-    | ternaryOperator
+    | doWhileCondition
     ;
 
 declaration: type ID (',' ID)*; // Variable declaration with optional initialization
@@ -28,8 +28,7 @@ ifCondition: 'if' '(' expression ')' statement ('else' statement)?; // If-else c
 
 whileCondition: 'while' '(' expression ')' statement; // While loop condition
 
-ternaryOperator: expression 'if' expression 'else' expression; // Ternary operator
-
+doWhileCondition: 'do' statement 'while' '(' expression ')' ';'; // Do-while loop condition
 expression
     : assignment
     ;
