@@ -4,8 +4,21 @@ from PLC_GrammarParser import PLC_GrammarParser
 from TypeCheckerVisitor import TypeCheckerVisitor
 from CodeGeneratorVisitor import CodeGeneratorVisitor
 from Interpreter import Interpreter
+import sys
+
+def is_stack_code(code: str) -> bool:
+    return any(line.strip().upper().startswith(("PUSH", "LOAD", "SAVE", "ADD", "SUB", "MOD", "PRINT")) for line in code.splitlines())
 
 def run_code(input_code):
+    if is_stack_code(input_code):
+        print("▶ Spúšťam priamo stackový program")
+        with open("generated_code.txt", "w", encoding="utf-8") as f:
+            f.write(input_code.strip())
+
+        interpreter = Interpreter()
+        interpreter.execute("generated_code.txt")
+        return
+
     input_stream = InputStream(input_code + "\n")
     lexer = PLC_GrammarLexer(input_stream)
     tokens = CommonTokenStream(lexer)
@@ -19,7 +32,6 @@ def run_code(input_code):
 
     print("✓ Syntax OK")
 
-    # Typová kontrola
     type_checker = TypeCheckerVisitor()
     errors = type_checker.visit(tree)
     if errors:
@@ -29,7 +41,6 @@ def run_code(input_code):
 
     print("✓ Typová kontrola OK")
 
-    # Generovanie inštrukcií
     code_gen = CodeGeneratorVisitor()
     instructions = code_gen.visit(tree)
 
@@ -38,17 +49,13 @@ def run_code(input_code):
 
     print("✓ Generovanie kódu OK")
 
-    # Spusti interpreter
     print("▶ Spúšťam program:")
     interpreter = Interpreter()
     print("====== GENERATED CODE ======")
     print("\n".join(instructions))
-
     interpreter.execute("generated_code.txt")
 
-
 if __name__ == "__main__":
-    # Tu načítaš svoj zdrojový súbor s write, read, atď.
     with open("input.txt", "r", encoding="utf-8") as f:
         full_code = f.read()
 
