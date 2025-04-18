@@ -62,7 +62,7 @@ class TypeCheckerVisitor(PLC_GrammarVisitor):
 
         for expr in ctx.assignment():
             expr_type = self.visit(expr)
-            if expr_type not in ["int", "float", "string", "bool"]:
+            if expr_type not in ["int", "float", "string"]:
                 self.errors.append(f"Chyba: Hodnota typu '{expr_type}' nie je podporovaná na zápis do súboru.")
                 return None
         return "void"

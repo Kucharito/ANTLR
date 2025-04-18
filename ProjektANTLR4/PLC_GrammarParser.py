@@ -10,7 +10,7 @@ else:
 
 def serializedATN():
     return [
-        4,1,39,200,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
+        4,1,40,199,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
         6,2,7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,
         2,14,7,14,2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,2,20,
         7,20,1,0,4,0,44,8,0,11,0,12,0,45,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -18,21 +18,21 @@ def serializedATN():
         2,1,2,5,2,73,8,2,10,2,12,2,76,9,2,1,3,1,3,1,3,1,3,5,3,82,8,3,10,
         3,12,3,85,9,3,1,4,1,4,1,4,1,4,5,4,91,8,4,10,4,12,4,94,9,4,1,5,1,
         5,5,5,98,8,5,10,5,12,5,101,9,5,1,5,1,5,1,6,1,6,1,6,1,6,1,6,1,6,1,
-        6,3,6,112,8,6,1,7,1,7,1,7,1,7,1,7,1,7,1,8,1,8,1,8,5,8,123,8,8,10,
-        8,12,8,126,9,8,1,9,1,9,1,10,1,10,1,10,3,10,133,8,10,1,11,1,11,1,
-        11,5,11,138,8,11,10,11,12,11,141,9,11,1,12,1,12,1,12,5,12,146,8,
-        12,10,12,12,12,149,9,12,1,13,1,13,1,13,5,13,154,8,13,10,13,12,13,
-        157,9,13,1,14,1,14,1,14,5,14,162,8,14,10,14,12,14,165,9,14,1,15,
-        1,15,1,15,5,15,170,8,15,10,15,12,15,173,9,15,1,16,1,16,1,16,5,16,
-        178,8,16,10,16,12,16,181,9,16,1,17,3,17,184,8,17,1,17,1,17,1,18,
-        1,18,1,18,1,18,1,18,1,18,3,18,194,8,18,1,19,1,19,1,20,1,20,1,20,
-        0,0,21,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,
-        0,7,1,0,16,17,1,0,18,19,1,0,20,22,1,0,23,25,2,0,21,21,26,26,1,0,
-        33,36,1,0,27,31,203,0,43,1,0,0,0,2,66,1,0,0,0,4,68,1,0,0,0,6,77,
+        6,3,6,112,8,6,1,7,1,7,1,7,1,7,1,7,1,7,1,8,1,8,1,8,4,8,123,8,8,11,
+        8,12,8,124,1,9,1,9,1,10,1,10,1,10,3,10,132,8,10,1,11,1,11,1,11,5,
+        11,137,8,11,10,11,12,11,140,9,11,1,12,1,12,1,12,5,12,145,8,12,10,
+        12,12,12,148,9,12,1,13,1,13,1,13,5,13,153,8,13,10,13,12,13,156,9,
+        13,1,14,1,14,1,14,5,14,161,8,14,10,14,12,14,164,9,14,1,15,1,15,1,
+        15,5,15,169,8,15,10,15,12,15,172,9,15,1,16,1,16,1,16,5,16,177,8,
+        16,10,16,12,16,180,9,16,1,17,3,17,183,8,17,1,17,1,17,1,18,1,18,1,
+        18,1,18,1,18,1,18,3,18,193,8,18,1,19,1,19,1,20,1,20,1,20,0,0,21,
+        0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,0,7,1,
+        0,16,17,1,0,18,19,1,0,20,22,1,0,23,25,2,0,21,21,26,26,2,0,33,36,
+        40,40,1,0,27,31,202,0,43,1,0,0,0,2,66,1,0,0,0,4,68,1,0,0,0,6,77,
         1,0,0,0,8,86,1,0,0,0,10,95,1,0,0,0,12,104,1,0,0,0,14,113,1,0,0,0,
-        16,119,1,0,0,0,18,127,1,0,0,0,20,129,1,0,0,0,22,134,1,0,0,0,24,142,
-        1,0,0,0,26,150,1,0,0,0,28,158,1,0,0,0,30,166,1,0,0,0,32,174,1,0,
-        0,0,34,183,1,0,0,0,36,193,1,0,0,0,38,195,1,0,0,0,40,197,1,0,0,0,
+        16,119,1,0,0,0,18,126,1,0,0,0,20,128,1,0,0,0,22,133,1,0,0,0,24,141,
+        1,0,0,0,26,149,1,0,0,0,28,157,1,0,0,0,30,165,1,0,0,0,32,173,1,0,
+        0,0,34,182,1,0,0,0,36,192,1,0,0,0,38,194,1,0,0,0,40,196,1,0,0,0,
         42,44,3,2,1,0,43,42,1,0,0,0,44,45,1,0,0,0,45,43,1,0,0,0,45,46,1,
         0,0,0,46,1,1,0,0,0,47,67,5,1,0,0,48,49,3,4,2,0,49,50,5,1,0,0,50,
         67,1,0,0,0,51,52,3,18,9,0,52,53,5,1,0,0,53,67,1,0,0,0,54,55,3,6,
@@ -53,31 +53,30 @@ def serializedATN():
         107,3,18,9,0,107,108,5,9,0,0,108,111,3,2,1,0,109,110,5,10,0,0,110,
         112,3,2,1,0,111,109,1,0,0,0,111,112,1,0,0,0,112,13,1,0,0,0,113,114,
         5,11,0,0,114,115,5,8,0,0,115,116,3,18,9,0,116,117,5,9,0,0,117,118,
-        3,2,1,0,118,15,1,0,0,0,119,124,5,32,0,0,120,121,5,12,0,0,121,123,
-        3,20,10,0,122,120,1,0,0,0,123,126,1,0,0,0,124,122,1,0,0,0,124,125,
-        1,0,0,0,125,17,1,0,0,0,126,124,1,0,0,0,127,128,3,20,10,0,128,19,
-        1,0,0,0,129,132,3,22,11,0,130,131,5,13,0,0,131,133,3,20,10,0,132,
-        130,1,0,0,0,132,133,1,0,0,0,133,21,1,0,0,0,134,139,3,24,12,0,135,
-        136,5,14,0,0,136,138,3,24,12,0,137,135,1,0,0,0,138,141,1,0,0,0,139,
-        137,1,0,0,0,139,140,1,0,0,0,140,23,1,0,0,0,141,139,1,0,0,0,142,147,
-        3,26,13,0,143,144,5,15,0,0,144,146,3,26,13,0,145,143,1,0,0,0,146,
-        149,1,0,0,0,147,145,1,0,0,0,147,148,1,0,0,0,148,25,1,0,0,0,149,147,
-        1,0,0,0,150,155,3,28,14,0,151,152,7,0,0,0,152,154,3,28,14,0,153,
-        151,1,0,0,0,154,157,1,0,0,0,155,153,1,0,0,0,155,156,1,0,0,0,156,
-        27,1,0,0,0,157,155,1,0,0,0,158,163,3,30,15,0,159,160,7,1,0,0,160,
-        162,3,30,15,0,161,159,1,0,0,0,162,165,1,0,0,0,163,161,1,0,0,0,163,
-        164,1,0,0,0,164,29,1,0,0,0,165,163,1,0,0,0,166,171,3,32,16,0,167,
-        168,7,2,0,0,168,170,3,32,16,0,169,167,1,0,0,0,170,173,1,0,0,0,171,
-        169,1,0,0,0,171,172,1,0,0,0,172,31,1,0,0,0,173,171,1,0,0,0,174,179,
-        3,34,17,0,175,176,7,3,0,0,176,178,3,34,17,0,177,175,1,0,0,0,178,
-        181,1,0,0,0,179,177,1,0,0,0,179,180,1,0,0,0,180,33,1,0,0,0,181,179,
-        1,0,0,0,182,184,7,4,0,0,183,182,1,0,0,0,183,184,1,0,0,0,184,185,
-        1,0,0,0,185,186,3,36,18,0,186,35,1,0,0,0,187,188,5,8,0,0,188,189,
-        3,18,9,0,189,190,5,9,0,0,190,194,1,0,0,0,191,194,3,38,19,0,192,194,
-        5,32,0,0,193,187,1,0,0,0,193,191,1,0,0,0,193,192,1,0,0,0,194,37,
-        1,0,0,0,195,196,7,5,0,0,196,39,1,0,0,0,197,198,7,6,0,0,198,41,1,
-        0,0,0,17,45,66,74,83,92,99,111,124,132,139,147,155,163,171,179,183,
-        193
+        3,2,1,0,118,15,1,0,0,0,119,122,5,32,0,0,120,121,5,12,0,0,121,123,
+        3,20,10,0,122,120,1,0,0,0,123,124,1,0,0,0,124,122,1,0,0,0,124,125,
+        1,0,0,0,125,17,1,0,0,0,126,127,3,20,10,0,127,19,1,0,0,0,128,131,
+        3,22,11,0,129,130,5,13,0,0,130,132,3,20,10,0,131,129,1,0,0,0,131,
+        132,1,0,0,0,132,21,1,0,0,0,133,138,3,24,12,0,134,135,5,14,0,0,135,
+        137,3,24,12,0,136,134,1,0,0,0,137,140,1,0,0,0,138,136,1,0,0,0,138,
+        139,1,0,0,0,139,23,1,0,0,0,140,138,1,0,0,0,141,146,3,26,13,0,142,
+        143,5,15,0,0,143,145,3,26,13,0,144,142,1,0,0,0,145,148,1,0,0,0,146,
+        144,1,0,0,0,146,147,1,0,0,0,147,25,1,0,0,0,148,146,1,0,0,0,149,154,
+        3,28,14,0,150,151,7,0,0,0,151,153,3,28,14,0,152,150,1,0,0,0,153,
+        156,1,0,0,0,154,152,1,0,0,0,154,155,1,0,0,0,155,27,1,0,0,0,156,154,
+        1,0,0,0,157,162,3,30,15,0,158,159,7,1,0,0,159,161,3,30,15,0,160,
+        158,1,0,0,0,161,164,1,0,0,0,162,160,1,0,0,0,162,163,1,0,0,0,163,
+        29,1,0,0,0,164,162,1,0,0,0,165,170,3,32,16,0,166,167,7,2,0,0,167,
+        169,3,32,16,0,168,166,1,0,0,0,169,172,1,0,0,0,170,168,1,0,0,0,170,
+        171,1,0,0,0,171,31,1,0,0,0,172,170,1,0,0,0,173,178,3,34,17,0,174,
+        175,7,3,0,0,175,177,3,34,17,0,176,174,1,0,0,0,177,180,1,0,0,0,178,
+        176,1,0,0,0,178,179,1,0,0,0,179,33,1,0,0,0,180,178,1,0,0,0,181,183,
+        7,4,0,0,182,181,1,0,0,0,182,183,1,0,0,0,183,184,1,0,0,0,184,185,
+        3,36,18,0,185,35,1,0,0,0,186,187,5,8,0,0,187,188,3,18,9,0,188,189,
+        5,9,0,0,189,193,1,0,0,0,190,193,3,38,19,0,191,193,5,32,0,0,192,186,
+        1,0,0,0,192,190,1,0,0,0,192,191,1,0,0,0,193,37,1,0,0,0,194,195,7,
+        5,0,0,195,39,1,0,0,0,196,197,7,6,0,0,197,41,1,0,0,0,17,45,66,74,
+        83,92,99,111,124,131,138,146,154,162,170,178,182,192
     ]
 
 class PLC_GrammarParser ( Parser ):
@@ -94,7 +93,9 @@ class PLC_GrammarParser ( Parser ):
                      "'}'", "'if'", "'('", "')'", "'else'", "'while'", "'<<'", 
                      "'='", "'||'", "'&&'", "'=='", "'!='", "'<'", "'>'", 
                      "'+'", "'-'", "'.'", "'*'", "'/'", "'%'", "'!'", "'int'", 
-                     "'float'", "'bool'", "'string'", "'FILE'" ]
+                     "'float'", "'bool'", "'string'", "'FILE'", "<INVALID>", 
+                     "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
+                     "<INVALID>", "<INVALID>", "<INVALID>", "'file'" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
@@ -105,7 +106,7 @@ class PLC_GrammarParser ( Parser ):
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "ID", "INT", "FLOAT", "BOOL", "STRING", "NEWLINE", 
-                      "WS", "COMMENT" ]
+                      "WS", "COMMENT", "FILE" ]
 
     RULE_prog = 0
     RULE_statement = 1
@@ -175,6 +176,7 @@ class PLC_GrammarParser ( Parser ):
     NEWLINE=37
     WS=38
     COMMENT=39
+    FILE=40
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -235,7 +237,7 @@ class PLC_GrammarParser ( Parser ):
                 self.state = 45 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & 137373944250) != 0)):
+                if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & 1236885572026) != 0)):
                     break
 
         except RecognitionException as re:
@@ -634,7 +636,7 @@ class PLC_GrammarParser ( Parser ):
             self.state = 99
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while (((_la) & ~0x3f) == 0 and ((1 << _la) & 137373944250) != 0):
+            while (((_la) & ~0x3f) == 0 and ((1 << _la) & 1236885572026) != 0):
                 self.state = 96
                 self.statement()
                 self.state = 101
@@ -831,17 +833,19 @@ class PLC_GrammarParser ( Parser ):
             self.enterOuterAlt(localctx, 1)
             self.state = 119
             self.match(PLC_GrammarParser.ID)
-            self.state = 124
+            self.state = 122 
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==12:
+            while True:
                 self.state = 120
                 self.match(PLC_GrammarParser.T__11)
                 self.state = 121
                 self.assignment()
-                self.state = 126
+                self.state = 124 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
+                if not (_la==12):
+                    break
 
         except RecognitionException as re:
             localctx.exception = re
@@ -889,7 +893,7 @@ class PLC_GrammarParser ( Parser ):
         self.enterRule(localctx, 18, self.RULE_expression)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 127
+            self.state = 126
             self.assignment()
         except RecognitionException as re:
             localctx.exception = re
@@ -942,15 +946,15 @@ class PLC_GrammarParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 129
+            self.state = 128
             self.or_()
-            self.state = 132
+            self.state = 131
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==13:
-                self.state = 130
+                self.state = 129
                 self.match(PLC_GrammarParser.T__12)
-                self.state = 131
+                self.state = 130
                 self.assignment()
 
 
@@ -1004,17 +1008,17 @@ class PLC_GrammarParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 134
+            self.state = 133
             self.and_()
-            self.state = 139
+            self.state = 138
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==14:
-                self.state = 135
+                self.state = 134
                 self.match(PLC_GrammarParser.T__13)
-                self.state = 136
+                self.state = 135
                 self.and_()
-                self.state = 141
+                self.state = 140
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -1068,17 +1072,17 @@ class PLC_GrammarParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 142
+            self.state = 141
             self.equality()
-            self.state = 147
+            self.state = 146
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==15:
-                self.state = 143
+                self.state = 142
                 self.match(PLC_GrammarParser.T__14)
-                self.state = 144
+                self.state = 143
                 self.equality()
-                self.state = 149
+                self.state = 148
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -1132,22 +1136,22 @@ class PLC_GrammarParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 150
+            self.state = 149
             self.relational()
-            self.state = 155
+            self.state = 154
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==16 or _la==17:
-                self.state = 151
+                self.state = 150
                 _la = self._input.LA(1)
                 if not(_la==16 or _la==17):
                     self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
-                self.state = 152
+                self.state = 151
                 self.relational()
-                self.state = 157
+                self.state = 156
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -1201,22 +1205,22 @@ class PLC_GrammarParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 158
+            self.state = 157
             self.additive()
-            self.state = 163
+            self.state = 162
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==18 or _la==19:
-                self.state = 159
+                self.state = 158
                 _la = self._input.LA(1)
                 if not(_la==18 or _la==19):
                     self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
-                self.state = 160
+                self.state = 159
                 self.additive()
-                self.state = 165
+                self.state = 164
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -1270,22 +1274,22 @@ class PLC_GrammarParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 166
+            self.state = 165
             self.multiplicative()
-            self.state = 171
+            self.state = 170
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while (((_la) & ~0x3f) == 0 and ((1 << _la) & 7340032) != 0):
-                self.state = 167
+                self.state = 166
                 _la = self._input.LA(1)
                 if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 7340032) != 0)):
                     self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
-                self.state = 168
+                self.state = 167
                 self.multiplicative()
-                self.state = 173
+                self.state = 172
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -1339,22 +1343,22 @@ class PLC_GrammarParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 174
+            self.state = 173
             self.unary()
-            self.state = 179
+            self.state = 178
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while (((_la) & ~0x3f) == 0 and ((1 << _la) & 58720256) != 0):
-                self.state = 175
+                self.state = 174
                 _la = self._input.LA(1)
                 if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 58720256) != 0)):
                     self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
-                self.state = 176
+                self.state = 175
                 self.unary()
-                self.state = 181
+                self.state = 180
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -1405,11 +1409,11 @@ class PLC_GrammarParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 183
+            self.state = 182
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==21 or _la==26:
-                self.state = 182
+                self.state = 181
                 _la = self._input.LA(1)
                 if not(_la==21 or _la==26):
                     self._errHandler.recoverInline(self)
@@ -1418,7 +1422,7 @@ class PLC_GrammarParser ( Parser ):
                     self.consume()
 
 
-            self.state = 185
+            self.state = 184
             self.primary()
         except RecognitionException as re:
             localctx.exception = re
@@ -1472,26 +1476,26 @@ class PLC_GrammarParser ( Parser ):
         localctx = PLC_GrammarParser.PrimaryContext(self, self._ctx, self.state)
         self.enterRule(localctx, 36, self.RULE_primary)
         try:
-            self.state = 193
+            self.state = 192
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [8]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 187
+                self.state = 186
                 self.match(PLC_GrammarParser.T__7)
-                self.state = 188
+                self.state = 187
                 self.expression()
-                self.state = 189
+                self.state = 188
                 self.match(PLC_GrammarParser.T__8)
                 pass
-            elif token in [33, 34, 35, 36]:
+            elif token in [33, 34, 35, 36, 40]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 191
+                self.state = 190
                 self.literal()
                 pass
             elif token in [32]:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 192
+                self.state = 191
                 self.match(PLC_GrammarParser.ID)
                 pass
             else:
@@ -1525,6 +1529,9 @@ class PLC_GrammarParser ( Parser ):
         def STRING(self):
             return self.getToken(PLC_GrammarParser.STRING, 0)
 
+        def FILE(self):
+            return self.getToken(PLC_GrammarParser.FILE, 0)
+
         def getRuleIndex(self):
             return PLC_GrammarParser.RULE_literal
 
@@ -1552,9 +1559,9 @@ class PLC_GrammarParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 195
+            self.state = 194
             _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 128849018880) != 0)):
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 1228360646656) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -1603,7 +1610,7 @@ class PLC_GrammarParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 197
+            self.state = 196
             _la = self._input.LA(1)
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 4160749568) != 0)):
                 self._errHandler.recoverInline(self)

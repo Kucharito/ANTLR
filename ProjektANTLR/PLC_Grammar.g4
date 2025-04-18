@@ -11,21 +11,25 @@ statement
     | block 
     | ifCondition 
     | whileCondition
+    | fileWrite ';'
     ;
 
-declaration: type ID (',' ID)*; // Variable declaration with optional initialization
+//declaration: type ID (',' ID)* ('='STRING); 
+declaration: type ID (',' ID)* ('=' expression)?; // Declaration of variables with optional initialization
 
 //read and write
-read: 'read' ID (','ID)*; // Read statement for multiple variables
-write: 'write' expression (','expression)*; // Write statement for multiple expressions
+read: 'read' ID (','ID)*; 
+write: 'write' expression (','expression)*; 
 
 //block
-block: '{' statement* '}'; // Block of statements enclosed in braces
+block: '{' statement* '}'; 
 
 //ifCondition
 ifCondition: 'if' '(' expression ')' statement ('else' statement)?; // If-else condition
 
 whileCondition: 'while' '(' expression ')' statement; // While loop condition
+
+fileWrite: ID ('<<' assignment)+;
 
 expression
     : assignment
@@ -81,13 +85,15 @@ type
         | 'float'
         | 'bool'
         | 'string'
+        | 'FILE'
         ;
-
+        
+FILE : 'file'; // match file identifiers
 ID : [a-zA-Z] [a-zA-Z0-9]* ; // match identifiers
 INT : [0-9]+ ; // match integers
 FLOAT : [0-9]+ '.' [0-9]+ ; // match floating point numbers
 BOOL: 'true' | 'false' ; // match boolean values
 STRING : '"' ( ~["\\] | '\\' . )* '"' ; // match strings
-NEWLINE : '\r'? '\n' ; // return newlines to parser (is end-statement signal)
+NEWLINE : '\r'? '\n' -> skip;
 WS : [ \t]+ -> skip ; // toss out whitespace
 COMMENT : '//' ~[\r\n]* -> skip ; // single line comments

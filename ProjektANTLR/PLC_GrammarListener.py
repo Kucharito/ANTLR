@@ -80,6 +80,15 @@ class PLC_GrammarListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by PLC_GrammarParser#fileWrite.
+    def enterFileWrite(self, ctx:PLC_GrammarParser.FileWriteContext):
+        pass
+
+    # Exit a parse tree produced by PLC_GrammarParser#fileWrite.
+    def exitFileWrite(self, ctx:PLC_GrammarParser.FileWriteContext):
+        pass
+
+
     # Enter a parse tree produced by PLC_GrammarParser#expression.
     def enterExpression(self, ctx:PLC_GrammarParser.ExpressionContext):
         pass

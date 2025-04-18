@@ -2,40 +2,54 @@ from antlr4 import *
 from PLC_GrammarLexer import PLC_GrammarLexer
 from PLC_GrammarParser import PLC_GrammarParser
 from TypeCheckerVisitor import TypeCheckerVisitor
+from CodeGeneratorVisitor import CodeGeneratorVisitor
+from Interpreter import Interpreter
 
-visitor = TypeCheckerVisitor()
+def run_code(input_code):
+    input_stream = InputStream(input_code + "\n")
+    lexer = PLC_GrammarLexer(input_stream)
+    tokens = CommonTokenStream(lexer)
+    parser = PLC_GrammarParser(tokens)
 
-print("PLC REPL – syntax a typová kontrola")
+    tree = parser.prog()
 
-while True:
-    try:
-        line = input(">> ")
-        if not line.strip():
-            continue
+    if parser.getNumberOfSyntaxErrors() > 0:
+        print("❌ Chyba: Syntaktická chyba.")
+        return
 
-        input_stream = InputStream(line + "\n")
-        lexer = PLC_GrammarLexer(input_stream)
-        tokens = CommonTokenStream(lexer)
-        parser = PLC_GrammarParser(tokens)
+    print("✓ Syntax OK")
 
-        tree = parser.statement()
+    # Typová kontrola
+    type_checker = TypeCheckerVisitor()
+    errors = type_checker.visit(tree)
+    if errors:
+        for err in errors:
+            print("❌", err)
+        return
 
-        if parser.getNumberOfSyntaxErrors() > 0:
-            print("❌ Chyba: Syntaktická chyba.")
-            continue
+    print("✓ Typová kontrola OK")
 
-        print("✓ Syntax OK")
+    # Generovanie inštrukcií
+    code_gen = CodeGeneratorVisitor()
+    instructions = code_gen.visit(tree)
 
-        visitor.visit(tree)
-        if visitor.errors:
-            for err in visitor.errors:
-                print("❌", err)
-            visitor.errors.clear()
-        else:
-            print("✓ Typová kontrola OK")
+    with open("generated_code.txt", "w", encoding="utf-8") as f:
+        f.write("\n".join(instructions))
 
-    except KeyboardInterrupt:
-        print("\nBye!")
-        break
-    except Exception as e:
-        print("❌ Chyba:", e)
+    print("✓ Generovanie kódu OK")
+
+    # Spusti interpreter
+    print("▶ Spúšťam program:")
+    interpreter = Interpreter()
+    print("====== GENERATED CODE ======")
+    print("\n".join(instructions))
+
+    interpreter.execute("generated_code.txt")
+
+
+if __name__ == "__main__":
+    # Tu načítaš svoj zdrojový súbor s write, read, atď.
+    with open("input.txt", "r", encoding="utf-8") as f:
+        full_code = f.read()
+
+    run_code(full_code)

@@ -49,6 +49,11 @@ class PLC_GrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by PLC_GrammarParser#fileWrite.
+    def visitFileWrite(self, ctx:PLC_GrammarParser.FileWriteContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by PLC_GrammarParser#expression.
     def visitExpression(self, ctx:PLC_GrammarParser.ExpressionContext):
         return self.visitChildren(ctx)

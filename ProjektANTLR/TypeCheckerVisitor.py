@@ -49,6 +49,25 @@ class TypeCheckerVisitor(PLC_GrammarVisitor):
         if cond_type != "bool":
             self.errors.append("Chyba: Podmienka vo 'while' musi mat typ bool.")
         self.visit(ctx.statement())
+        
+    def visitFileWrite(self, ctx):
+        first_id = ctx.ID().getText()
+        if first_id not in self.symbol_table:
+            self.errors.append(f"Chyba: Premenná '{first_id}' nie je deklarovana.")
+            return None
+        
+        if self.symbol_table[first_id] != "FILE":
+            self.errors.append(f"Chyba: Premenná '{first_id}' musi mat typ FILE.")
+            return None
+
+        for expr in ctx.assignment():
+            expr_type = self.visit(expr)
+            if expr_type not in ["int", "float", "string"]:
+                self.errors.append(f"Chyba: Hodnota typu '{expr_type}' nie je podporovaná na zápis do súboru.")
+                return None
+            
+            
+
 
     def visitAssignment(self, ctx):
         if ctx.getChildCount() == 3:
@@ -198,8 +217,6 @@ class TypeCheckerVisitor(PLC_GrammarVisitor):
             return "string"
         if ctx.FLOAT():
             return "float"
-
-    
 
     
 

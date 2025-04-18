@@ -28,7 +28,7 @@ ifCondition: 'if' '(' expression ')' statement ('else' statement)?; // If-else c
 
 whileCondition: 'while' '(' expression ')' statement; // While loop condition
 
-fileWrite: ID ('<<' assignment)*;
+fileWrite: ID ('<<' assignment)+;
 
 expression
     : assignment
@@ -77,6 +77,7 @@ literal
     | FLOAT
     | BOOL
     | STRING
+    | FILE
     ;
 
 type
@@ -86,7 +87,8 @@ type
         | 'string'
         | 'FILE'
         ;
-
+        
+FILE : 'file'; // match file identifiers
 ID : [a-zA-Z] [a-zA-Z0-9]* ; // match identifiers
 INT : [0-9]+ ; // match integers
 FLOAT : [0-9]+ '.' [0-9]+ ; // match floating point numbers
