@@ -1,35 +1,13 @@
-push I 0
-save a
-push I 0
-save b
-push I 15
-save b
-load b
-save a
-load a
-load a
-load b
-add I
-load a
-load b
-mod
-push F 0.0
-save c
-load a
-load b
-add I
-save c
-load c
-load c
-load a
-itof
-add F
-load a
-save c
-load c
-load c
-push F 1.1
-add F
-push I 10
-load a
-mod
+push S "output.txt"
+save f
+push I 1
+load f
+fwrite
+push S "abc"
+load f
+fwrite
+push F 3.14
+load f
+fwrite1
+abc
+3.14

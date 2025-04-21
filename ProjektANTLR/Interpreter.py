@@ -3,8 +3,21 @@ class Interpreter:
         self.stack = []
         self.memory = {}
         self.labels = {}
+        self.file_writes = {}  # sem sa budú ukladať fwrite výstupy pre spätný preklad
+        self.file_names = {}  # mapa: názov premennej -> názov súboru
+
+
         self.ip = 0  # inštrukčný ukazateľ
 
+    def print_reverse_filewrites(self):
+        print("\n====== REVERSE TRANSLATION ======")
+        for file_value, values in self.file_writes.items():
+            # Získaj meno premennej podľa hodnoty
+            varname = self.file_names.get(file_value, file_value)
+            print(f'FILE {varname} = "{file_value}";')
+            print(f'{varname} << ' + ' << '.join(repr(v) for v in values) + ';')
+
+    
     def execute(self, filename):
         with open(filename, 'r', encoding="utf-8") as f:
             lines = [line.strip() for line in f if line.strip()]
@@ -114,12 +127,18 @@ class Interpreter:
                 self.stack.append(float(a))
 
             elif instr == "SAVE":
-                # SAVE <typ> <var> alebo len SAVE <var>
                 if len(parts) == 3:
                     varname = parts[2]
                 else:
                     varname = parts[1]
-                self.memory[varname] = self.stack.pop()
+
+                value = self.stack.pop()
+                self.memory[varname] = value
+
+                # ak ukladáme FILE, zapamätaj si mapovanie
+                if isinstance(value, str) and value.endswith(".txt"):
+                    self.file_names[value] = varname
+
 
             elif instr == "LOAD":
                 varname = parts[1]
@@ -149,11 +168,27 @@ class Interpreter:
                 condition = self.stack.pop()
                 if not condition:
                     self.ip = self.labels[label]
+            elif instr == "FWRITE":
+                filename = self.stack.pop()
+                value = self.stack.pop()
+
+                if filename not in self.file_writes:
+                    self.file_writes[filename] = []
+                self.file_writes[filename].append(value)
+
+                with open("generated_code.txt", 'a', encoding="utf-8") as f:
+                    f.write(str(value) + "\n")
+
 
             else:
                 raise ValueError(f"Neznáma inštrukcia: {instr}")
+        if self.file_writes:
+            self.print_reverse_filewrites()
+
 
     def _binary_op(self, typ, operation):
         b = self.stack.pop()
         a = self.stack.pop()
         self.stack.append(operation(a, b))
+
+

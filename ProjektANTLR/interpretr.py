@@ -27,19 +27,19 @@ def run_code(input_code):
     tree = parser.prog()
 
     if parser.getNumberOfSyntaxErrors() > 0:
-        print("❌ Chyba: Syntaktická chyba.")
+        print("Chyba: Syntaktická chyba.")
         return
 
-    print("✓ Syntax OK")
+    print("Syntax OK")
 
     type_checker = TypeCheckerVisitor()
     errors = type_checker.visit(tree)
     if errors:
         for err in errors:
-            print("❌", err)
+            print("Error", err)
         return
 
-    print("✓ Typová kontrola OK")
+    print("Typová kontrola OK")
 
     code_gen = CodeGeneratorVisitor()
     instructions = code_gen.visit(tree)
@@ -47,11 +47,10 @@ def run_code(input_code):
     with open("generated_code.txt", "w", encoding="utf-8") as f:
         f.write("\n".join(instructions))
 
-    print("✓ Generovanie kódu OK")
+    print("Generovanie kódu OK")
 
-    print("▶ Spúšťam program:")
+    print("Spúšťam program:")
     interpreter = Interpreter()
-    print("====== GENERATED CODE ======")
     print("\n".join(instructions))
     interpreter.execute("generated_code.txt")
 

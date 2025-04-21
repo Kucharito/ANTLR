@@ -20,39 +20,37 @@ class CodeGeneratorVisitor(PLC_GrammarVisitor):
 
     def visitDeclaration(self, ctx):
         var_type = ctx.type_().getText()
-        for id_token in ctx.ID():
+        ids = ctx.ID()
+        expr = ctx.expression()
+
+        for i, id_token in enumerate(ids):
             var_name = id_token.getText()
             self.var_types[var_name] = var_type
-            if var_type == "int":
-                self.code.append("push I 0")
-            elif var_type == "float":
-                self.code.append("push F 0.0")
-            elif var_type == "string":
-                self.code.append('push S ""')
-            elif var_type == "bool":
-                self.code.append("push B false")
-            elif var_type == "FILE":
-                self.code.append('push S ""')
+
+            if expr and i == len(ids) - 1:
+                self.visit(expr)
+            else:
+                if var_type == "int":
+                    self.code.append("push I 0")
+                elif var_type == "float":
+                    self.code.append("push F 0.0")
+                elif var_type == "string" or var_type == "FILE":
+                    self.code.append('push S ""')
+                elif var_type == "bool":
+                    self.code.append("push B false")
+
             self.code.append(f"save {var_name}")
+
 
     def visitExpression(self, ctx):
         return self.visit(ctx.assignment())
 
     def visitAssignment(self, ctx):
-        # Ak je to priradenie typu A = B = C = ... = výraz
-        if ctx.getChildCount() == 3:
-            left = ctx.getChild(0).getText()
-            right_ctx = ctx.getChild(2)
-
-            value_type = self.visit(right_ctx)
-
-            # Každý assignment musí zduplikovať hodnotu pred uložením
-            # takže pridáme nový push pre každé ukladanie späť do zásobníka
-            # Priraď iba raz pre najhlbšieho potomka
-            self.code.append(f"save {left}")
-            # Zduplikujeme hodnotu predchádzajúcimi priradeniami
-            if isinstance(right_ctx, PLC_GrammarParser.AssignmentContext):
-                self.code.append(f"load {left}")  # push back to stack for previous
+        if ctx.assignment():
+            value_type = self.visit(ctx.assignment())
+            var_name = ctx.or_().getText()
+            self.code.append(f"save {var_name}")
+            self.code.append(f"load {var_name}") 
             return value_type
         else:
             return self.visit(ctx.or_())
@@ -162,8 +160,18 @@ class CodeGeneratorVisitor(PLC_GrammarVisitor):
 
     def visitWrite(self, ctx):
         for expr in ctx.expression():
-            self.visit(expr)
+            result_type = self.visit(expr)
+
+            # Ak výraz nič nepridal na stack, doplníme load
+            if result_type is None:
+                var_name = expr.getText()
+                if var_name in self.var_types:
+                    self.code.append(f"load {var_name}")
         self.code.append(f"print {len(ctx.expression())}")
+
+
+
+
 
     def visitRead(self, ctx):
         for id_token in ctx.ID():
@@ -171,6 +179,7 @@ class CodeGeneratorVisitor(PLC_GrammarVisitor):
             typ = self.var_types.get(var_name, "int")
             self.code.append(f"read {typ[0].upper()}")
             self.code.append(f"save {var_name}")
+
 
     def visitUnary(self, ctx):
         if ctx.getChildCount() == 2:
@@ -191,7 +200,6 @@ class CodeGeneratorVisitor(PLC_GrammarVisitor):
             right_type = self.visit(ctx.relational(i))
             op = ctx.getChild(2 * i - 1).getText()
 
-            # Automatická konverzia int -> float
             if left_type == "int" and right_type == "float":
                 self.code.insert(-1, "itof")
                 result_type = "float"
@@ -201,9 +209,8 @@ class CodeGeneratorVisitor(PLC_GrammarVisitor):
             elif left_type == right_type:
                 result_type = left_type
             else:
-                result_type = "string"  # fallback na eq S ak by typy neboli rovnaké a nie float/int
+                result_type = "string" 
 
-            # Pridaj inštrukciu eq s typom
             if result_type == "int":
                 self.code.append("eq I")
             elif result_type == "float":
@@ -216,12 +223,9 @@ class CodeGeneratorVisitor(PLC_GrammarVisitor):
             if op == "!=":
                 self.code.append("not")
 
-            left_type = "bool"  # výstupom porovnania je vždy bool
+            left_type = "bool" 
 
         return "bool"
-
-
-
 
 
     def visitIfCondition(self, ctx):
@@ -285,4 +289,11 @@ class CodeGeneratorVisitor(PLC_GrammarVisitor):
             self.code.append(instr)
             left_type = "bool"
         return "bool"
+    
+    def visitFileWrite(self, ctx):
+        filename = ctx.ID().getText()
+        for expr in ctx.assignment():
+            self.visit(expr)
+            self.code.append(f"load {filename}")
+            self.code.append("fwrite")
 

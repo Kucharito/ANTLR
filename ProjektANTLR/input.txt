@@ -1,10 +1,11 @@
-int a,b;
-a = b = 15;
-a + b;
-a % b;
-float c;
-c = a + b;
-c + a;
-c = a;
-c + 1.1;
-10 % a;
+push S "output.txt"
+save f
+push I 1
+load f
+fwrite
+push S "abc"
+load f
+fwrite
+push F 3.14
+load f
+fwrite
