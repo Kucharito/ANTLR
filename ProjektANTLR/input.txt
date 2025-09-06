@@ -1,11 +1,3 @@
-push S "output.txt"
-save f
-push I 1
-load f
-fwrite
-push S "abc"
-load f
-fwrite
-push F 3.14
-load f
-fwrite
+FILE f = "nazov.txt";
+string a="adam";
+f << 1 << 2.0 << "string" << "pridane";

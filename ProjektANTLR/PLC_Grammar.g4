@@ -15,7 +15,7 @@ statement
     ;
 
 //declaration: type ID (',' ID)* ('='STRING); 
-declaration: type ID (',' ID)* ('=' expression)?; // Declaration of variables with optional initialization
+declaration: type ID (',' ID)* ('=' expression)?; 
 
 //read and write
 read: 'read' ID (','ID)*; 

@@ -1,299 +1,309 @@
 from PLC_GrammarVisitor import PLC_GrammarVisitor
 from PLC_GrammarParser import PLC_GrammarParser
 
+
 class CodeGeneratorVisitor(PLC_GrammarVisitor):
     def __init__(self):
-        self.type_stack = [] 
-        self.code = []  # Generovaný kód
+        self.code = []
+        self.variables = {}
         self.label_counter = 0
-        self.var_types = {}  # Mapa typov premenných
 
-    def get_next_label(self):
-        label = self.label_counter
+    def getExpressionType(self, ctx):
+        text = ctx.getText()
+        if '"' in text:
+            return "string"
+        elif "." in text:
+            return "float"
+        elif text in ["true", "false"]:
+            return "bool"
+        elif text.isdigit():
+            return "int"
+        elif text in self.variables:
+            return self.variables[text]
+        return "int" 
+
+    def new_label(self):
+        label = str(self.label_counter)
         self.label_counter += 1
         return label
 
     def visitProg(self, ctx):
-        for stmt in ctx.statement():
-            self.visit(stmt)
+        for stat in ctx.statement():
+            self.visit(stat)
         return self.code
 
     def visitDeclaration(self, ctx):
         var_type = ctx.type_().getText()
-        ids = ctx.ID()
-        expr = ctx.expression()
+        for var in ctx.ID():
+            name = var.getText()
+            self.variables[name] = var_type
 
-        for i, id_token in enumerate(ids):
-            var_name = id_token.getText()
-            self.var_types[var_name] = var_type
-
-            if expr and i == len(ids) - 1:
-                self.visit(expr)
-            else:
+            if ctx.expression():  
+                self.visit(ctx.expression()) 
+                expr_type = self.getExpressionType(ctx.expression())
+                if var_type == "float" and expr_type == "int":
+                    self.code.append("itof")
+                self.code.append(f"save {name}")
+            else: 
                 if var_type == "int":
                     self.code.append("push I 0")
+                    self.code.append(f"save {name}")
                 elif var_type == "float":
                     self.code.append("push F 0.0")
-                elif var_type == "string" or var_type == "FILE":
-                    self.code.append('push S ""')
+                    self.code.append(f"save {name}")
                 elif var_type == "bool":
                     self.code.append("push B false")
+                    self.code.append(f"save {name}")
+                elif var_type == "string" or var_type == "FILE":
+                    self.code.append('push S ""')
+                    self.code.append(f"save {name}")
 
-            self.code.append(f"save {var_name}")
 
+    def visitAssignement(self, ctx):
+        if ctx.getChildCount() == 1:
+            return self.visit(ctx.getChild(0))
+
+        var_name = ctx.getChild(0).getText()
+        var_type = self.variables.get(var_name)
+        self.visit(ctx.getChild(2))  # Navštív pravú stranu priradenia
+        expr_type = self.getExpressionType(ctx.getChild(2))
+
+        if var_type == "float" and expr_type == "int":
+            self.code.append("itof")
+        self.code.append(f"save {var_name}")
 
     def visitExpression(self, ctx):
-        return self.visit(ctx.assignment())
+        return self.visit(ctx.getChild(0))
 
-    def visitAssignment(self, ctx):
-        if ctx.assignment():
-            value_type = self.visit(ctx.assignment())
-            var_name = ctx.or_().getText()
-            self.code.append(f"save {var_name}")
-            self.code.append(f"load {var_name}") 
-            return value_type
-        else:
-            return self.visit(ctx.or_())
+    def visitConcatExpression(self, ctx):
+        self.visit(ctx.orExpression(0))
+        for i in range(1, len(ctx.orExpression())):
+            self.visit(ctx.orExpression(i))
+            self.code.append("concat")
 
+    def visitOrExpression(self, ctx):
+        self.visit(ctx.andExpression(0))
+        for i in range(1, len(ctx.andExpression())):
+            self.visit(ctx.andExpression(i))
+            self.code.append("or")
 
-    def visitLiteral(self, ctx):
-        if ctx.INT():
-            value = ctx.INT().getText()
-            self.code.append(f"push I {value}")
-            return "int"
-        elif ctx.FLOAT():
-            value = ctx.FLOAT().getText()
-            self.code.append(f"push F {value}")
-            return "float"
-        elif ctx.STRING():
-            value = ctx.STRING().getText()
-            self.code.append(f"push S {value}")
-            return "string"
-        elif ctx.BOOL():
-            value = ctx.BOOL().getText()
-            self.code.append(f"push B {value}")
-            return "bool"
+    def visitAndExpression(self, ctx):
+        self.visit(ctx.equality(0))
+        for i in range(1, len(ctx.equality())):
+            self.visit(ctx.equality(i))
+            self.code.append("and")
+
+    def visitEquality(self, ctx):
+        self.visit(ctx.relational(0))
+        left_type = self.getExpressionType(ctx.relational(0))
+
+        for i in range(1, len(ctx.relational())):
+            op = ctx.getChild(2 * i - 1).getText()
+            right_expr = ctx.relational(i)
+            right_type = self.getExpressionType(right_expr)
+
+            # Konverzie ak treba
+            if left_type == "int" and right_type == "float":
+                self.code.append("itof")
+                self.visit(right_expr)
+                self.code.append("eq F")
+                left_type = "float"
+            elif left_type == "float" and right_type == "int":
+                self.visit(right_expr)
+                self.code.append("itof")
+                self.code.append("eq F")
+                left_type = "float"
+            else:
+                self.visit(right_expr)
+                if left_type == "string":
+                    self.code.append("eq S")
+                elif left_type == "bool":
+                    self.code.append("eq B")
+                elif left_type == "float":
+                    self.code.append("eq F")
+                else:
+                    self.code.append("eq I")
+
+            if op == "!=":
+                self.code.append("not")
+            left_type = left_type  # typ po porovnaní je bool, ale pre konzistenciu
+
+    def visitRelational(self, ctx):
+        self.visit(ctx.additive(0))
+        left_type = self.getExpressionType(ctx.additive(0))
+
+        for i in range(1, len(ctx.additive())):
+            op = ctx.getChild(2 * i - 1).getText()
+            right_expr = ctx.additive(i)
+            right_type = self.getExpressionType(right_expr)
+
+            if left_type == "int" and right_type == "float":
+                self.code.append("itof")
+                self.visit(right_expr)
+                self.code.append("gt F" if op == ">" else "lt F")
+                left_type = "float"
+            elif left_type == "float" and right_type == "int":
+                self.visit(right_expr)
+                self.code.append("itof")
+                self.code.append("gt F" if op == ">" else "lt F")
+                left_type = "float"
+            else:
+                self.visit(right_expr)
+                instr_type = "F" if left_type == "float" else "I"
+                if op == "<":
+                    self.code.append(f"lt {instr_type}")
+                elif op == ">":
+                    self.code.append(f"gt {instr_type}")
+                left_type = left_type  # zostáva
+
+    def visitAdditive(self, ctx):
+        self.visit(ctx.multiplicative(0))
+        left_type = self.getExpressionType(ctx.multiplicative(0))
+        for i in range(1, len(ctx.multiplicative())):
+            right_expr = ctx.multiplicative(i)
+            op = ctx.getChild(2 * i - 1).getText()
+
+            self.visit(right_expr)
+            right_type = self.getExpressionType(right_expr)
+
+            if op == "+":
+                if left_type == "float" or right_type == "float":
+                    if left_type == "int":
+                        self.code.append("itof")
+                    if right_type == "int":
+                        self.code.append("itof")
+                    self.code.append("add F")
+                    left_type = "float"
+                else:
+                    self.code.append("add I")
+                    left_type = "int"
+            elif op == "-":
+                if left_type == "float" or right_type == "float":
+                    if left_type == "int":
+                        self.code.append("itof")
+                    if right_type == "int":
+                        self.code.append("itof")
+                    self.code.append("sub F")
+                    left_type = "float"
+                else:
+                    self.code.append("sub I")
+                    left_type = "int"
+            elif op == ".":
+                self.code.append("concat")
+                left_type = "string"
+
+    def visitMultiplicative(self, ctx):
+        self.visit(ctx.unary(0))
+        left_type = self.getExpressionType(ctx.unary(0))
+        for i in range(1, len(ctx.unary())):
+            right_expr = ctx.unary(i)
+            op = ctx.getChild(2 * i - 1).getText()
+
+            self.visit(right_expr)
+            right_type = self.getExpressionType(right_expr)
+
+            if op == "*":
+                if left_type == "float" or right_type == "float":
+                    if left_type == "int":
+                        self.code.append("itof")
+                    if right_type == "int":
+                        self.code.append("itof")
+                    self.code.append("mul F")
+                    left_type = "float"
+                else:
+                    self.code.append("mul I")
+                    left_type = "int"
+            elif op == "/":
+                if left_type == "float" or right_type == "float":
+                    if left_type == "int":
+                        self.code.append("itof")
+                    if right_type == "int":
+                        self.code.append("itof")
+                    self.code.append("div F")
+                    left_type = "float"
+                else:
+                    self.code.append("div I")
+                    left_type = "int"
+            elif op == "%":
+                self.code.append("mod")
+                left_type = "int"
+
+    def visitUnary(self, ctx):
+        if ctx.getChildCount() == 1:
+            return self.visit(ctx.getChild(0))
+        op = ctx.getChild(0).getText()
+        self.visit(ctx.getChild(1))
+        if op == "-":
+            self.code.append("uminus I")
+        elif op == "!":
+            self.code.append("not")
 
     def visitPrimary(self, ctx):
         if ctx.ID():
-            var_name = ctx.ID().getText()
-            # ak je to boolean literál, nevolaj load!
-            if var_name == "true":
-                self.code.append("push B true")
-                return "bool"
-            elif var_name == "false":
-                self.code.append("push B false")
-                return "bool"
-            self.code.append(f"load {var_name}")
-            return self.var_types.get(var_name, "int")
+            name = ctx.ID().getText()
+            self.code.append(f"load {name}")
         elif ctx.literal():
             return self.visit(ctx.literal())
         elif ctx.expression():
             return self.visit(ctx.expression())
 
-
-    def visitAdditive(self, ctx):
-        left_type = self.visit(ctx.multiplicative(0))
-        for i in range(1, len(ctx.multiplicative())):
-            right_type = self.visit(ctx.multiplicative(i))
-            op = ctx.getChild(2*i-1).getText()
-            if op == "+":
-                if left_type == right_type == "int":
-                    self.code.append("add I")
-                    left_type = "int"
-                elif left_type == right_type == "float":
-                    self.code.append("add F")
-                    left_type = "float"
-                elif left_type == "int" and right_type == "float":
-                    self.code.append("itof")
-                    self.code.append("add F")
-                    left_type = "float"
-                elif left_type == "float" and right_type == "int":
-                    self.code.append("itof")
-                    self.code.append("add F")
-                    left_type = "float"
-            elif op == "-":
-                if left_type == right_type == "int":
-                    self.code.append("sub I")
-                    left_type = "int"
-                else:
-                    self.code.append("sub F")
-                    left_type = "float"
-            elif op == ".":
-                self.code.append("concat")
-                left_type = "string"
-        return left_type
-
-    def visitMultiplicative(self, ctx):
-        left_type = self.visit(ctx.unary(0))
-        for i in range(1, len(ctx.unary())):
-            right_type = self.visit(ctx.unary(i))
-            op = ctx.getChild(2*i - 1).getText()
-
-            if op == "%":
-                self.code.append("mod")
-                left_type = "int"
-            elif op == "*":
-                if left_type == right_type == "int":
-                    self.code.append("mul I")
-                    left_type = "int"
-                elif "float" in [left_type, right_type]:
-                    if left_type == "int":
-                        self.code.insert(-1, "itof")
-                    if right_type == "int":
-                        self.code.append("itof")
-                    self.code.append("mul F")
-                    left_type = "float"
-            elif op == "/":
-                if left_type == right_type == "int":
-                    self.code.append("div I")
-                    left_type = "int"
-                elif "float" in [left_type, right_type]:
-                    if left_type == "int":
-                        self.code.insert(-1, "itof")
-                    if right_type == "int":
-                        self.code.append("itof")
-                    self.code.append("div F")
-                    left_type = "float"
-        return left_type
-
+    def visitLiteral(self, ctx):
+        if ctx.INT():
+            self.code.append(f"push I {ctx.INT().getText()}")
+        elif ctx.FLOAT():
+            self.code.append(f"push F {ctx.FLOAT().getText()}")
+        elif ctx.STRING():
+            self.code.append(f'push S {ctx.STRING().getText()}')
+        elif ctx.BOOL():
+            self.code.append(f"push B {ctx.BOOL().getText()}")
 
     def visitWrite(self, ctx):
+        n = len(ctx.expression())
         for expr in ctx.expression():
-            result_type = self.visit(expr)
-
-            # Ak výraz nič nepridal na stack, doplníme load
-            if result_type is None:
-                var_name = expr.getText()
-                if var_name in self.var_types:
-                    self.code.append(f"load {var_name}")
-        self.code.append(f"print {len(ctx.expression())}")
-
-
-
-
+            self.visit(expr)
+        self.code.append(f"print {n}")
 
     def visitRead(self, ctx):
-        for id_token in ctx.ID():
-            var_name = id_token.getText()
-            typ = self.var_types.get(var_name, "int")
-            self.code.append(f"read {typ[0].upper()}")
-            self.code.append(f"save {var_name}")
-
-
-    def visitUnary(self, ctx):
-        if ctx.getChildCount() == 2:
-            op = ctx.getChild(0).getText()
-            typ = self.visit(ctx.primary())
-            if op == "-":
-                self.code.append("uminus I")
-                return "int"
-            elif op == "!":
-                self.code.append("not")
-                return "bool"
-        else:
-            return self.visit(ctx.primary())
-
-    def visitEquality(self, ctx):
-        left_type = self.visit(ctx.relational(0))
-        for i in range(1, len(ctx.relational())):
-            right_type = self.visit(ctx.relational(i))
-            op = ctx.getChild(2 * i - 1).getText()
-
-            if left_type == "int" and right_type == "float":
-                self.code.insert(-1, "itof")
-                result_type = "float"
-            elif left_type == "float" and right_type == "int":
-                self.code.insert(-2, "itof")
-                result_type = "float"
-            elif left_type == right_type:
-                result_type = left_type
-            else:
-                result_type = "string" 
-
-            if result_type == "int":
-                self.code.append("eq I")
-            elif result_type == "float":
-                self.code.append("eq F")
-            elif result_type == "bool":
-                self.code.append("eq B")
-            elif result_type == "string":
-                self.code.append("eq S")
-
-            if op == "!=":
-                self.code.append("not")
-
-            left_type = "bool" 
-
-        return "bool"
-
+        for id_ in ctx.ID():
+            name = id_.getText()
+            var_type = self.variables.get(name, "int")
+            self.code.append(f"read {var_type[0].upper()} {name}")
+            self.code.append(f"save {var_type[0].upper()} {name}")
 
     def visitIfCondition(self, ctx):
-        label_else = self.get_next_label()
-        label_end = self.get_next_label()
-        self.visit(ctx.expression())
-        self.code.append(f"fjmp {label_else}")
-        self.visit(ctx.statement(0))
-        self.code.append(f"jmp {label_end}")
-        self.code.append(f"label {label_else}")
-        if ctx.statement(1):
+        else_label = self.new_label()
+        end_label = self.new_label()
+
+        self.visit(ctx.expression())  
+        self.code.append(f"fjmp {else_label}")  
+
+        self.visit(ctx.statement(0)) 
+        self.code.append(f"jmp {end_label}")  
+
+        self.code.append(f"label {else_label}")
+        if ctx.statement(1):  
             self.visit(ctx.statement(1))
-        self.code.append(f"label {label_end}")
+
+        self.code.append(f"label {end_label}")
 
     def visitWhileCondition(self, ctx):
-        label_start = self.get_next_label()
-        label_end = self.get_next_label()
-        self.code.append(f"label {label_start}")
-        self.visit(ctx.expression())
-        self.code.append(f"fjmp {label_end}")
-        self.visit(ctx.statement())
-        self.code.append(f"jmp {label_start}")
-        self.code.append(f"label {label_end}")
+        start_label = self.new_label()
+        end_label = self.new_label()
 
-    def visitBlock(self, ctx):
-        for stmt in ctx.statement():
-            self.visit(stmt)
+        self.code.append(f"label {start_label}")
+        self.visit(ctx.expression()) 
+        self.code.append(f"fjmp {end_label}")
 
-    def visitOr(self, ctx):
-        self.visit(ctx.and_(0))
-        for i in range(1, len(ctx.and_())):
-            self.visit(ctx.and_(i))
-            self.code.append("or")
-        return "bool"
+        self.visit(ctx.statement())  
+        self.code.append(f"jmp {start_label}")  
 
-    def visitAnd(self, ctx):
-        self.visit(ctx.equality(0))
-        for i in range(1, len(ctx.equality())):
-            self.visit(ctx.equality(i))
-            self.code.append("and")
-        return "bool"
-
-    def visitRelational(self, ctx):
-        left_type = self.visit(ctx.additive(0))
-        for i in range(1, len(ctx.additive())):
-            right_type = self.visit(ctx.additive(i))
-            op = ctx.getChild(2 * i - 1).getText()
-
-            if left_type == "int" and right_type == "float":
-                self.code.insert(-1, "itof")
-                instr = "lt F" if op == "<" else "gt F"
-                left_type = "float"
-            elif left_type == "float" and right_type == "int":
-                self.code.insert(-2, "itof")
-                instr = "lt F" if op == "<" else "gt F"
-                left_type = "float"
-            elif left_type == right_type == "float":
-                instr = "lt F" if op == "<" else "gt F"
-            else:
-                instr = "lt I" if op == "<" else "gt I"
-            self.code.append(instr)
-            left_type = "bool"
-        return "bool"
-    
+        self.code.append(f"label {end_label}")
+         
     def visitFileWrite(self, ctx):
-        filename = ctx.ID().getText()
+        file_name = ctx.ID().getText()
         for expr in ctx.assignment():
             self.visit(expr)
-            self.code.append(f"load {filename}")
-            self.code.append("fwrite")
+            self.code.append(f"load {file_name}")
+            self.code.append(f"fwrite {file_name}")
 
+    

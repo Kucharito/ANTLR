@@ -1,13 +1,16 @@
-push S "output.txt"
+push S "nazov.txt"
 save f
+push S "adam"
+save a
 push I 1
 load f
-fwrite
-push S "abc"
+fwrite f
+push F 2.0
 load f
-fwrite
-push F 3.14
+fwrite f
+push S "string"
 load f
-fwrite1
-abc
-3.14
+fwrite f
+push S "pridane"
+load f
+fwrite f
